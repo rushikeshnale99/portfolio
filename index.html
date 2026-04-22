@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rushikesh Nale | ENTC Engineer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cyan:#00f5ff;
+  --violet:#7c3aed;
+  --pink:#f472b6;
+  --green:#10b981;
+  --orange:#f59e0b;
+  --dark:#030712;
+  --dark2:#0d1117;
+  --card:#0f1923;
+  --card2:#111827;
+  --border:rgba(0,245,255,0.12);
+  --text:#e2e8f0;
+  --muted:#64748b;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden;}
+
+/* NOISE OVERLAY */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* MESH BACKGROUND */
+.mesh{position:fixed;inset:0;z-index:-1;overflow:hidden;}
+.mesh::before{content:'';position:absolute;width:800px;height:800px;background:radial-gradient(circle,rgba(124,58,237,0.15) 0%,transparent 70%);top:-200px;left:-200px;animation:drift1 18s ease-in-out infinite alternate;}
+.mesh::after{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(0,245,255,0.1) 0%,transparent 70%);bottom:-100px;right:-100px;animation:drift2 14s ease-in-out infinite alternate;}
+.mesh-mid{position:fixed;width:500px;height:500px;background:radial-gradient(circle,rgba(244,114,182,0.08) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:-1;animation:drift3 22s ease-in-out infinite alternate;}
+@keyframes drift1{0%{transform:translate(0,0) scale(1);}100%{transform:translate(100px,80px) scale(1.2);}}
+@keyframes drift2{0%{transform:translate(0,0) scale(1);}100%{transform:translate(-80px,-60px) scale(1.3);}}
+@keyframes drift3{0%{transform:translate(-50%,-50%) scale(1);}100%{transform:translate(-50%,-50%) scale(1.4);}}
+
+/* CURSOR GLOW */
+.cursor-glow{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,245,255,0.04) 0%,transparent 70%);pointer-events:none;transform:translate(-50%,-50%);z-index:9999;transition:all 0.1s;}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:1000;padding:16px 48px;display:flex;justify-content:space-between;align-items:center;background:rgba(3,7,18,0.75);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px;}
+nav ul{list-style:none;display:flex;gap:4px;}
+nav a{text-decoration:none;color:var(--muted);font-size:13px;font-weight:500;padding:7px 15px;border-radius:8px;transition:all 0.25s;position:relative;}
+nav a:hover,nav a.active{color:var(--dark);background:linear-gradient(135deg,var(--cyan),var(--violet));}
+.nav-indicator{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--cyan);display:none;}
+nav a.active .nav-indicator{display:block;}
+
+/* SECTIONS */
+section{padding:110px 8%;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;}
+
+/* ======= HERO ======= */
+#home{text-align:center;overflow:hidden;}
+.grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(0,245,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:20px;background:rgba(0,245,255,0.07);border:1px solid rgba(0,245,255,0.2);font-size:12px;font-weight:600;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;margin-bottom:32px;animation:fadeDown 0.8s ease both;}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+
+.avatar-wrap{position:relative;display:inline-block;margin-bottom:32px;animation:fadeUp 1s 0.2s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.avatar-ring{width:130px;height:130px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--violet),var(--pink));padding:3px;display:inline-block;}
+.avatar-inner{width:100%;height:100%;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:38px;font-weight:800;color:var(--cyan);}
+.avatar-orbit{position:absolute;inset:-16px;border-radius:50%;border:1px dashed rgba(0,245,255,0.2);animation:spin 12s linear infinite;}
+.avatar-orbit::before{content:'';position:absolute;width:10px;height:10px;border-radius:50%;background:var(--cyan);top:-5px;left:50%;transform:translateX(-50%);box-shadow:0 0 10px var(--cyan);}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+h1{font-family:'Syne',sans-serif;font-size:clamp(36px,6vw,72px);font-weight:800;line-height:1.1;margin-bottom:14px;animation:fadeUp 1s 0.35s ease both;}
+h1 .name-grad{background:linear-gradient(135deg,#fff 30%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.typing-wrap{font-size:clamp(16px,2.5vw,22px);color:var(--muted);margin-bottom:14px;animation:fadeUp 1s 0.5s ease both;}
+.typing{font-family:'JetBrains Mono',monospace;color:var(--cyan);}
+.tagline{color:var(--muted);font-size:15px;max-width:540px;margin:0 auto 32px;line-height:1.9;animation:fadeUp 1s 0.65s ease both;}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:36px;animation:fadeUp 1s 0.8s ease both;}
+.badge{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.5px;}
+.badge.b1{background:rgba(0,245,255,0.1);border:1px solid rgba(0,245,255,0.3);color:var(--cyan);}
+.badge.b2{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);color:#a78bfa;}
+.badge.b3{background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.3);color:var(--pink);}
+.badge.b4{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:var(--green);}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeUp 1s 0.95s ease both;}
+.btn-primary{padding:13px 30px;background:linear-gradient(135deg,var(--cyan),var(--violet));border:none;border-radius:10px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all 0.3s;position:relative;overflow:hidden;}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);opacity:0;transition:opacity 0.3s;}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,245,255,0.3);}
+.btn-primary:hover::before{opacity:1;}
+.btn-outline{padding:13px 30px;background:transparent;border:1.5px solid var(--border);color:var(--text);border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all 0.3s;}
+.btn-outline:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-3px);background:rgba(0,245,255,0.05);}
+
+/* SCROLL INDICATOR */
+.scroll-ind{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--cyan),transparent);animation:scrollAnim 2s ease-in-out infinite;}
+@keyframes scrollAnim{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}50.01%{transform:scaleY(1);transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
+
+/* ======= SECTION HEADERS ======= */
+.section-title{margin-bottom:60px;}
+.section-title .label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.section-title .label::before,.section-title .label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(0,245,255,0.3));}
+.section-title .label::before{background:linear-gradient(90deg,transparent,rgba(0,245,255,0.3));}
+.section-title .label::after{background:linear-gradient(90deg,rgba(0,245,255,0.3),transparent);}
+.section-title h2{font-family:'Syne',sans-serif;font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.1;margin-bottom:12px;}
+.section-title p{color:var(--muted);font-size:15px;}
+.grad-text{background:linear-gradient(135deg,var(--cyan),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* ======= ABOUT ======= */
+#about{background:transparent;}
+.about-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:44px;align-items:start;}
+.about-text p{color:#94a3b8;line-height:2;font-size:15px;margin-bottom:16px;}
+.info-list{list-style:none;margin-top:14px;}
+.info-list li{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:14px;color:#94a3b8;}
+.info-list li .label{color:var(--cyan);min-width:100px;font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.stat-panel{background:var(--card);border-radius:20px;padding:28px;border:1px solid var(--border);position:relative;overflow:hidden;}
+.stat-panel::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,245,255,0.03),transparent);pointer-events:none;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;}
+.stat-box{background:rgba(0,245,255,0.04);border-radius:14px;padding:20px;text-align:center;border:1px solid rgba(0,245,255,0.08);transition:all 0.3s;position:relative;overflow:hidden;}
+.stat-box:hover{border-color:rgba(0,245,255,0.3);background:rgba(0,245,255,0.08);transform:scale(1.03);}
+.stat-box .num{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-box .lbl{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:0.5px;}
+
+/* ======= SKILLS ======= */
+#skills{background:transparent;}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;}
+.skill-card{background:var(--card);border-radius:16px;padding:24px;border:1px solid var(--border);transition:all 0.35s;position:relative;overflow:hidden;}
+.skill-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,245,255,0.03),rgba(124,58,237,0.03));opacity:0;transition:opacity 0.3s;}
+.skill-card:hover{transform:translateY(-6px);border-color:rgba(0,245,255,0.3);box-shadow:0 20px 50px rgba(0,245,255,0.08);}
+.skill-card:hover::before{opacity:1;}
+.skill-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,rgba(0,245,255,0.15),rgba(124,58,237,0.15));display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;border:1px solid rgba(0,245,255,0.15);}
+.skill-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.skill-name{font-size:15px;font-weight:600;color:#e2e8f0;}
+.skill-pct{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--cyan);}
+.bar-bg{background:rgba(0,0,0,0.4);border-radius:10px;height:6px;overflow:hidden;margin-bottom:12px;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--violet));border-radius:10px;width:0;transition:width 1.6s cubic-bezier(0.4,0,0.2,1);position:relative;}
+.bar-fill::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:white;box-shadow:0 0 10px var(--cyan);}
+.skill-tag{display:inline-block;font-size:11px;padding:3px 10px;border-radius:8px;background:rgba(0,245,255,0.08);color:var(--cyan);font-weight:500;font-family:'JetBrains Mono',monospace;}
+
+/* ======= CERTIFICATIONS ======= */
+#certifications{background:transparent;}
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;}
+.cert-card{background:var(--card);border-radius:20px;padding:28px;border:1px solid var(--border);transition:all 0.4s;position:relative;overflow:hidden;cursor:pointer;}
+.cert-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transition:opacity 0.3s;}
+.cert-card.anthropic::before{background:linear-gradient(90deg,#e8d5c4,#c4a882,#8b6f5e);}
+.cert-card.cisco::before{background:linear-gradient(90deg,#00bceb,#0a6ea5);}
+.cert-card:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,0.4);}
+.cert-card.anthropic:hover{border-color:rgba(200,160,120,0.4);box-shadow:0 24px 60px rgba(200,160,120,0.1);}
+.cert-card.cisco:hover{border-color:rgba(0,188,235,0.4);box-shadow:0 24px 60px rgba(0,188,235,0.1);}
+.cert-top{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.cert-logo{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;flex-shrink:0;}
+.cert-card.anthropic .cert-logo{background:linear-gradient(135deg,#2d2010,#3d2a12);border:1px solid rgba(200,160,120,0.3);color:#d4a96a;font-size:13px;font-family:'Syne',sans-serif;}
+.cert-card.cisco .cert-logo{background:linear-gradient(135deg,#001a2e,#002a45);border:1px solid rgba(0,188,235,0.3);}
+.cert-cisco-inner{background:linear-gradient(135deg,#00bceb,#0a6ea5);border-radius:6px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:white;text-align:center;line-height:1.2;}
+.cert-issuer{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-bottom:4px;}
+.cert-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:#f1f5f9;line-height:1.3;}
+.cert-meta{display:flex;align-items:center;gap:8px;margin-top:16px;}
+.cert-badge{padding:4px 12px;border-radius:8px;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;}
+.cert-card.anthropic .cert-badge{background:rgba(200,160,120,0.1);color:#d4a96a;border:1px solid rgba(200,160,120,0.2);}
+.cert-card.cisco .cert-badge{background:rgba(0,188,235,0.1);color:#00bceb;border:1px solid rgba(0,188,235,0.2);}
+.cert-check{margin-left:auto;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;}
+.cert-card.anthropic .cert-check{background:rgba(200,160,120,0.1);color:#d4a96a;}
+.cert-card.cisco .cert-check{background:rgba(0,188,235,0.1);color:#00bceb;}
+
+/* ======= BUSINESS ======= */
+#business{background:transparent;}
+.biz-wrap{background:var(--card);border-radius:24px;padding:44px;border:1px solid var(--border);display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:start;position:relative;overflow:hidden;}
+.biz-wrap::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(16,185,129,0.08) 0%,transparent 70%);pointer-events:none;}
+.biz-icon-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.biz-icon{width:80px;height:80px;border-radius:22px;background:linear-gradient(135deg,#064e3b,#065f46);border:1px solid rgba(16,185,129,0.3);display:flex;align-items:center;justify-content:center;font-size:36px;}
+.biz-status{padding:4px 12px;border-radius:8px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:var(--green);font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:5px;}
+.biz-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
+.biz-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:6px;}
+.biz-subtitle{color:var(--green);font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:18px;font-family:'JetBrains Mono',monospace;}
+.biz-desc{color:#94a3b8;font-size:15px;line-height:2;margin-bottom:14px;}
+.biz-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;}
+.biz-tag{padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:var(--green);}
+
+/* ======= PROJECTS ======= */
+#projects{background:transparent;}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;}
+.proj-card{background:var(--card);border-radius:20px;padding:28px;border:1px solid var(--border);transition:all 0.4s;position:relative;overflow:hidden;}
+.proj-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,245,255,0.04),rgba(124,58,237,0.04));opacity:0;transition:opacity 0.3s;}
+.proj-card:hover::after{opacity:1;}
+.proj-card:hover{transform:translateY(-8px);border-color:rgba(0,245,255,0.25);box-shadow:0 24px 60px rgba(0,245,255,0.08);}
+.proj-num{position:absolute;top:22px;right:24px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;}
+.proj-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(0,245,255,0.1),rgba(124,58,237,0.1));border:1px solid rgba(0,245,255,0.15);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px;}
+.proj-card h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#f1f5f9;margin-bottom:12px;}
+.proj-card p{color:#64748b;font-size:14px;line-height:1.9;margin-bottom:20px;}
+.tech-stack{display:flex;gap:7px;flex-wrap:wrap;}
+.tech{font-size:11px;padding:4px 10px;border-radius:7px;background:rgba(0,245,255,0.07);color:var(--cyan);font-family:'JetBrains Mono',monospace;border:1px solid rgba(0,245,255,0.1);}
+
+/* ======= CONTACT ======= */
+#contact{background:transparent;}
+.contact-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:50px;}
+.contact-info h3{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:22px;color:#f1f5f9;}
+.contact-item{display:flex;align-items:center;gap:16px;padding:16px;background:var(--card);border-radius:14px;margin-bottom:12px;border:1px solid var(--border);transition:all 0.3s;}
+.contact-item:hover{border-color:rgba(0,245,255,0.3);transform:translateX(5px);}
+.contact-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,rgba(0,245,255,0.1),rgba(124,58,237,0.1));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1px solid rgba(0,245,255,0.1);}
+.ci-label{font-size:11px;color:var(--muted);margin-bottom:3px;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;}
+.ci-val{font-size:14px;color:#e2e8f0;font-weight:500;}
+.cform{display:flex;flex-direction:column;gap:14px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.cform input,.cform textarea{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px;color:#fff;font-size:14px;font-family:'Space Grotesk',sans-serif;transition:all 0.3s;outline:none;}
+.cform input:focus,.cform textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,245,255,0.08);}
+.cform input::placeholder,.cform textarea::placeholder{color:#334155;}
+.cform textarea{resize:vertical;min-height:130px;}
+.submit-btn{padding:16px;background:linear-gradient(135deg,var(--cyan),var(--violet));border:none;border-radius:12px;color:#fff;font-weight:700;font-size:15px;cursor:pointer;transition:all 0.3s;font-family:'Space Grotesk',sans-serif;position:relative;overflow:hidden;}
+.submit-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);opacity:0;transition:opacity 0.3s;}
+.submit-btn:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,245,255,0.3);}
+.submit-btn:hover::before{opacity:1;}
+
+/* ======= FOOTER ======= */
+footer{padding:32px;background:var(--card);border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:13px;position:relative;}
+footer .footer-inner{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
+footer span{color:var(--cyan);font-weight:600;}
+footer .sep{color:var(--border);}
+
+/* ======= SCROLL TOP ======= */
+#topBtn{position:fixed;bottom:28px;right:28px;width:48px;height:48px;background:linear-gradient(135deg,var(--cyan),var(--violet));border:none;border-radius:14px;color:#fff;font-size:18px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:9999;transition:all 0.3s;box-shadow:0 8px 24px rgba(0,245,255,0.3);}
+#topBtn:hover{transform:scale(1.1) translateY(-3px);}
+#topBtn.show{display:flex;}
+
+/* ======= REVEAL ======= */
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1);}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(40px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1);}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+
+/* ======= RESPONSIVE ======= */
+@media(max-width:900px){
+  nav{padding:12px 20px;}
+  nav ul{gap:0;}
+  nav a{font-size:11px;padding:5px 8px;}
+  section{padding:90px 5%;}
+  .about-grid,.contact-wrap,.biz-wrap{grid-template-columns:1fr;gap:26px;}
+  .form-row{grid-template-columns:1fr;}
+  .biz-wrap{padding:28px;}
+}
+</style>
+</head>
+<body>
+
+<div class="mesh"><div class="mesh-mid"></div></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<nav id="navbar">
+  <div class="logo">RN.dev</div>
+  <ul>
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#certifications">Certs</a></li>
+    <li><a href="#business">Business</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="grid-lines"></div>
+  <div class="hero-badge"><span class="dot"></span>Available for Projects & Collaboration</div>
+  <div class="avatar-wrap">
+    <div class="avatar-ring">
+      <div class="avatar-inner">RN</div>
+    </div>
+    <div class="avatar-orbit"></div>
+  </div>
+  <h1><span class="name-grad">Rushikesh Nale</span></h1>
+  <div class="typing-wrap">I build as a <span class="typing" id="typing"></span><span style="color:var(--cyan);">|</span></div>
+  <p class="tagline">ENTC Engineering student from Pune — passionate about IoT, Embedded Systems & building real-world impact through technology and entrepreneurship.</p>
+  <div class="badges">
+    <span class="badge b1">ENTC Engineer</span>
+    <span class="badge b2">IoT Developer</span>
+    <span class="badge b3">Embedded Systems</span>
+    <span class="badge b4">Kisaan Dairy Farm</span>
+  </div>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="document.querySelector('#projects').scrollIntoView({behavior:'smooth'})">→ View Projects</button>
+    <button class="btn-outline" onclick="document.querySelector('#contact').scrollIntoView({behavior:'smooth'})">Get in Touch</button>
+  </div>
+  <div class="scroll-ind"><div class="scroll-line"></div></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-title reveal">
+    <div class="label">01 — About</div>
+    <h2>Who I <span class="grad-text">Am</span></h2>
+    <p>The story behind the engineer & entrepreneur</p>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal-left">
+      <p>Hi! I'm <strong style="color:var(--cyan)">Rushikesh Nale</strong>, an ENTC (Electronics & Telecommunication) engineering student from Pune, Maharashtra. I thrive at the intersection of hardware and software — building smart, connected systems that solve real problems.</p>
+      <p>Beyond engineering, I'm a proud <strong style="color:var(--green)">Business Owner</strong> running <strong style="color:var(--green)">Kisaan Dairy Farm</strong> — combining entrepreneurial drive with a passion for agriculture and community impact.</p>
+      <ul class="info-list">
+        <li><span class="label">Name</span> Rushikesh Nale</li>
+        <li><span class="label">Location</span> Pune, Maharashtra</li>
+        <li><span class="label">Branch</span> ENTC Engineering</li>
+        <li><span class="label">Business</span> Kisaan Dairy Farm</li>
+        <li><span class="label">Focus</span> IoT & Embedded Systems</li>
+      </ul>
+    </div>
+    <div class="stat-panel reveal-right">
+      <p style="color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;">// quick_stats.json</p>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="num">4+</div><div class="lbl">Certifications</div></div>
+        <div class="stat-box"><div class="num">85%</div><div class="lbl">C Proficiency</div></div>
+        <div class="stat-box"><div class="num">3+</div><div class="lbl">Projects Built</div></div>
+        <div class="stat-box"><div class="num">∞</div><div class="lbl">Curiosity Level</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-title reveal">
+    <div class="label">02 — Skills</div>
+    <h2>Tech <span class="grad-text">Arsenal</span></h2>
+    <p>Technologies & tools I work with daily</p>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal" data-pct="85">
+      <div class="skill-icon">⚙️</div>
+      <div class="skill-header"><span class="skill-name">C Programming</span><span class="skill-pct">85%</span></div>
+      <div class="bar-bg"><div class="bar-fill"></div></div>
+      <span class="skill-tag">Core Language</span>
+    </div>
+    <div class="skill-card reveal" data-pct="80">
+      <div class="skill-icon">🔌</div>
+      <div class="skill-header"><span class="skill-name">Embedded Systems</span><span class="skill-pct">80%</span></div>
+      <div class="bar-bg"><div class="bar-fill"></div></div>
+      <span class="skill-tag">Microcontrollers</span>
+    </div>
+    <div class="skill-card reveal" data-pct="75">
+      <div class="skill-icon">📡</div>
+      <div class="skill-header"><span class="skill-name">IoT Development</span><span class="skill-pct">75%</span></div>
+      <div class="bar-bg"><div class="bar-fill"></div></div>
+      <span class="skill-tag">Connected Devices</span>
+    </div>
+    <div class="skill-card reveal" data-pct="70">
+      <div class="skill-icon">🖥️</div>
+      <div class="skill-header"><span class="skill-name">Circuit Design</span><span class="skill-pct">70%</span></div>
+      <div class="bar-bg"><div class="bar-fill"></div></div>
+      <span class="skill-tag">PCB & Schematics</span>
+    </div>
+    <div class="skill-card reveal" data-pct="68">
+      <div class="skill-icon">🤖</div>
+      <div class="skill-header"><span class="skill-name">Arduino / ESP32</span><span class="skill-pct">68%</span></div>
+      <div class="bar-bg"><div class="bar-fill"></div></div>
+      <span class="skill-tag">Platforms</span>
+    </div>
+    <div class="skill-card reveal" data-pct="62">
+      <div class="skill-icon">🐍</div>
+      <div class="skill-header"><span class="skill-name">Python Scripting</span><span class="skill-pct">62%</span></div>
+      <div class="bar-bg"><div class="bar-fill"></div></div>
+      <span class="skill-tag">Automation</span>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="section-title reveal">
+    <div class="label">03 — Certifications</div>
+    <h2>Verified <span class="grad-text">Credentials</span></h2>
+    <p>Courses completed & skills certified</p>
+  </div>
+  <div class="certs-grid">
+
+    <!-- Claude 101 -->
+    <div class="cert-card anthropic reveal">
+      <div class="cert-top">
+        <div class="cert-logo">ANTH<br>ROPIC</div>
+        <div>
+          <div class="cert-issuer">ANTHROPIC</div>
+          <div class="cert-title">Claude 101</div>
+        </div>
+      </div>
+      <div class="cert-meta">
+        <span class="cert-badge">Completed</span>
+        <div class="cert-check">✓</div>
+      </div>
+    </div>
+
+    <!-- AI Fluency for Students -->
+    <div class="cert-card anthropic reveal">
+      <div class="cert-top">
+        <div class="cert-logo">ANTH<br>ROPIC</div>
+        <div>
+          <div class="cert-issuer">ANTHROPIC × UCC × HEA</div>
+          <div class="cert-title">AI Fluency for Students</div>
+        </div>
+      </div>
+      <div class="cert-meta">
+        <span class="cert-badge">Completed</span>
+        <div class="cert-check">✓</div>
+      </div>
+    </div>
+
+    <!-- AI Fluency: Framework & Foundations -->
+    <div class="cert-card anthropic reveal">
+      <div class="cert-top">
+        <div class="cert-logo">ANTH<br>ROPIC</div>
+        <div>
+          <div class="cert-issuer">ANTHROPIC × NATIONAL FORUM</div>
+          <div class="cert-title">AI Fluency: Framework & Foundations</div>
+        </div>
+      </div>
+      <div class="cert-meta">
+        <span class="cert-badge">Completed</span>
+        <div class="cert-check">✓</div>
+      </div>
+    </div>
+
+    <!-- AI Fluency for Nonprofits -->
+    <div class="cert-card anthropic reveal">
+      <div class="cert-top">
+        <div class="cert-logo">ANTH<br>ROPIC</div>
+        <div>
+          <div class="cert-issuer">ANTHROPIC × GIVINGTUESDAY</div>
+          <div class="cert-title">AI Fluency for Nonprofits</div>
+        </div>
+      </div>
+      <div class="cert-meta">
+        <span class="cert-badge">Completed</span>
+        <div class="cert-check">✓</div>
+      </div>
+    </div>
+
+    <!-- Cisco Python 1 -->
+    <div class="cert-card cisco reveal">
+      <div class="cert-top">
+        <div class="cert-logo">
+          <div class="cert-cisco-inner">CISCO<br>NET</div>
+        </div>
+        <div>
+          <div class="cert-issuer">CISCO NETWORKING ACADEMY</div>
+          <div class="cert-title">Python Essentials 1</div>
+        </div>
+      </div>
+      <div class="cert-meta">
+        <span class="cert-badge">Verified Badge</span>
+        <div class="cert-check">✓</div>
+      </div>
+    </div>
+
+    <!-- Cisco Python 2 -->
+    <div class="cert-card cisco reveal">
+      <div class="cert-top">
+        <div class="cert-logo">
+          <div class="cert-cisco-inner">CISCO<br>NET</div>
+        </div>
+        <div>
+          <div class="cert-issuer">CISCO NETWORKING ACADEMY</div>
+          <div class="cert-title">Python Essentials 2</div>
+        </div>
+      </div>
+      <div class="cert-meta">
+        <span class="cert-badge">Verified Badge</span>
+        <div class="cert-check">✓</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BUSINESS -->
+<section id="business">
+  <div class="section-title reveal">
+    <div class="label">04 — Business</div>
+    <h2>Beyond <span class="grad-text">Engineering</span></h2>
+    <p>Entrepreneurship rooted in community</p>
+  </div>
+  <div class="biz-wrap reveal">
+    <div class="biz-icon-wrap">
+      <div class="biz-icon">🐄</div>
+      <div class="biz-status"><span class="biz-dot"></span>Active</div>
+    </div>
+    <div>
+      <div class="biz-title">Kisaan Dairy Farm</div>
+      <div class="biz-subtitle">Founder & Owner</div>
+      <p class="biz-desc">Kisaan Dairy Farm is a community-driven venture dedicated to delivering fresh, high-quality dairy products. As founder, I oversee daily operations, supply chain logistics, and growth strategy — blending modern business thinking with traditional farming values.</p>
+      <p class="biz-desc">This venture reflects my commitment to rural entrepreneurship, sustainable agriculture, and empowering the local farming community while building a trusted dairy brand from the ground up.</p>
+      <div class="biz-tags">
+        <span class="biz-tag">🥛 Dairy Farming</span>
+        <span class="biz-tag">🌱 Agriculture</span>
+        <span class="biz-tag">📦 Supply Chain</span>
+        <span class="biz-tag">💼 Operations</span>
+        <span class="biz-tag">🤝 Rural Business</span>
+        <span class="biz-tag">🚀 Entrepreneurship</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-title reveal">
+    <div class="label">05 — Projects</div>
+    <h2>What I've <span class="grad-text">Built</span></h2>
+    <p>Engineering projects from concept to reality</p>
+  </div>
+  <div class="proj-grid">
+    <div class="proj-card reveal">
+      <div class="proj-num">01</div>
+      <div class="proj-icon">📡</div>
+      <h3>Morse Code Generator</h3>
+      <p>A microcontroller-based system that encodes text into Morse code signals, outputting via LED and buzzer in real time using GPIO control.</p>
+      <div class="tech-stack">
+        <span class="tech">C</span><span class="tech">8051 MCU</span><span class="tech">GPIO</span>
+      </div>
+    </div>
+    <div class="proj-card reveal">
+      <div class="proj-num">02</div>
+      <div class="proj-icon">🌡️</div>
+      <h3>IoT Monitoring System</h3>
+      <p>A sensor-based real-time monitoring system that reads environmental data and transmits it wirelessly to a cloud dashboard via MQTT protocol.</p>
+      <div class="tech-stack">
+        <span class="tech">ESP32</span><span class="tech">MQTT</span><span class="tech">Sensors</span><span class="tech">Cloud</span>
+      </div>
+    </div>
+    <div class="proj-card reveal">
+      <div class="proj-num">03</div>
+      <div class="proj-icon">⚡</div>
+      <h3>Smart Energy Monitor</h3>
+      <p>Tracks household power consumption using current sensors and displays live readings over a local web interface for energy efficiency insights.</p>
+      <div class="tech-stack">
+        <span class="tech">Arduino</span><span class="tech">Python</span><span class="tech">Wi-Fi</span><span class="tech">Web UI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-title reveal">
+    <div class="label">06 — Contact</div>
+    <h2>Let's <span class="grad-text">Connect</span></h2>
+    <p>Open to collaborations, projects & conversations</p>
+  </div>
+  <div class="contact-wrap">
+    <div class="contact-info reveal-left">
+      <h3>Get In Touch</h3>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div><div class="ci-label">Location</div><div class="ci-val">Pune, Maharashtra, India</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🎓</div>
+        <div><div class="ci-label">Education</div><div class="ci-val">ENTC Engineering</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🐄</div>
+        <div><div class="ci-label">Business</div><div class="ci-val">Kisaan Dairy Farm</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">⚙️</div>
+        <div><div class="ci-label">Focus Area</div><div class="ci-val">IoT & Embedded Systems</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🏆</div>
+        <div><div class="ci-label">Certifications</div><div class="ci-val">Anthropic AI + Cisco Python</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">💼</div>
+        <div><div class="ci-label">LinkedIn</div><div class="ci-val"><a href="https://www.linkedin.com/in/rushikesh-nale-611386405/" target="_blank" style="color:var(--cyan);text-decoration:none;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">linkedin.com/in/rushikesh-nale</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🐙</div>
+        <div><div class="ci-label">GitHub</div><div class="ci-val"><a href="https://github.com/rushikeshnale99" target="_blank" style="color:var(--cyan);text-decoration:none;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">github.com/rushikeshnale99</a></div></div>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <div class="cform">
+        <div class="form-row">
+          <input type="text" placeholder="Your Name" />
+          <input type="email" placeholder="Email Address" />
+        </div>
+        <input type="tel" placeholder="Phone Number" />
+        <input type="text" placeholder="Subject" />
+        <textarea placeholder="Your Message..."></textarea>
+        <button class="submit-btn" id="sendBtn">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span>Rushikesh Nale</span>
+    <span class="sep">·</span>
+    ENTC Engineer
+    <span class="sep">·</span>
+    <span>Kisaan Dairy Farm</span>
+    <span class="sep">·</span>
+    Pune, India
+    <span class="sep">·</span>
+    © 2026
+  </div>
+</footer>
+
+<button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+/* CURSOR GLOW */
+document.addEventListener('mousemove',e=>{
+  const g=document.getElementById('cursorGlow');
+  g.style.left=e.clientX+'px';
+  g.style.top=e.clientY+'px';
+});
+
+/* TYPING EFFECT */
+const words=["ENTC Student","IoT Developer","Embedded Engineer","Business Owner","Python Developer"];
+let i=0,j=0,del=false;
+function type(){
+  const el=document.getElementById('typing');
+  const cur=words[i];
+  if(!del){
+    el.textContent=cur.slice(0,++j);
+    if(j===cur.length){del=true;setTimeout(type,1400);return;}
+  } else {
+    el.textContent=cur.slice(0,--j);
+    if(j===0){del=false;i=(i+1)%words.length;}
+  }
+  setTimeout(type,del?55:105);
+}
+type();
+
+/* SCROLL REVEAL */
+const reveals=document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      const fill=e.target.querySelector('.bar-fill');
+      if(fill){
+        const pct=e.target.dataset.pct||'0';
+        setTimeout(()=>{fill.style.width=pct+'%';},250);
+      }
+    }
+  });
+},{threshold:0.12});
+reveals.forEach(r=>obs.observe(r));
+
+/* ACTIVE NAV */
+const sections=document.querySelectorAll('section');
+const navLinks=document.querySelectorAll('nav a');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-150) current=s.id;});
+  navLinks.forEach(a=>{
+    a.classList.remove('active');
+    if(a.getAttribute('href')==='#'+current) a.classList.add('active');
+  });
+  const btn=document.getElementById('topBtn');
+  btn.classList.toggle('show',window.scrollY>400);
+});
+
+/* SEND BUTTON */
+document.getElementById('sendBtn').addEventListener('click',function(){
+  const name=document.querySelector('.cform input[type="text"]').value.trim();
+  if(!name){this.style.background='linear-gradient(135deg,#ef4444,#dc2626)';this.textContent='Please fill your name!';setTimeout(()=>{this.textContent='Send Message →';this.style.background='';},2000);return;}
+  this.textContent='Message Sent! ✓';
+  this.style.background='linear-gradient(135deg,#10b981,#059669)';
+  setTimeout(()=>{this.textContent='Send Message →';this.style.background='';},3000);
+});
+</script>
+</body>
+</html>
